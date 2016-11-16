@@ -21,8 +21,8 @@ def main():
     main_canvas = Canvas(width =600, height = 400, bg='white')#create canvas
     main_canvas.pack(expand = YES, fill = BOTH)
     bck_img = PhotoImage(file="textures/background.gif")
-    main_canvas.create_image(0,0,image=bck_img,anchor=NW) # Sets background of the window to grass
     global main_canvas
+    main_canvas.create_image(0,0,image=bck_img,anchor=NW) # Sets background of the window to grass
     tractor_img = PhotoImage(file="textures/tractor.gif")
     x_min = 0 # min and max values used in setting boundaries on the canvas
     y_min= 0  # max values also used in setting starting coordinates for tractor

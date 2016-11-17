@@ -28,6 +28,16 @@ def inside_farm(tractor):
             status = False
         i+=1
     return status
+
+def fence(x,y,l,w):
+    """ Will make fence tileable (used in bottom of page) can be used later for
+    animal fencing etc.)"""
+    global fence_img
+    fence_img = PhotoImage(file="textures/fence.gif")
+    for a in range(x,l+x,10):
+        for b in range(y,w+y,10):
+            main_canvas.create_image(a,b,image=fence_img,anchor = NW)
+
 def go_start_field(tractor, farm_x, farm_y):
     move_widget(tractor,farm_x,farm_y)
 def main():
@@ -52,6 +62,9 @@ def main():
     existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2 = [],[],[],[]
     add_cabbage_field(100,50,int(rw*10),int(rh*10),cabbage_texture)
     add_cabbage_field(300,220,int(rw*10),int(rh*10),cabbage_texture)
+    fence(1,390,int(600),int(1))
+
+    
     print(existing_farms_x1)
     tractor_img = PhotoImage(file="textures/tractor.gif")
     tractor1 = main_canvas.create_image(300,200,image=tractor_img, anchor = NW) #adding tractor to the canvas

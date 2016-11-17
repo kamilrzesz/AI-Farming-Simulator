@@ -22,21 +22,20 @@ def inside_farm(tractor):
     i = 0
     while i < len(existing_farms_x1):
         if x > existing_farms_x1[i] and x< existing_farms_x2[i] and y > existing_farms_y1[i] and y<existing_farms_y2[i]:
-            go_start_field(tractor, existing_farms_x1[i],existing_farms_y1[i])
+            #go_start_field(tractor, existing_farms_x1[i],existing_farms_y1[i])
+            #Above will be used for gathering crops later
             return True
         else:
             status = False
         i+=1
     return status
 
-def fence(x,y,l,w):
+def fence(x,y,l,w,item):
     """ Will make fence tileable (used in bottom of page) can be used later for
     animal fencing etc.)"""
-    global fence_img
-    fence_img = PhotoImage(file="textures/fence.gif")
     for a in range(x,l+x,10):
         for b in range(y,w+y,10):
-            main_canvas.create_image(a,b,image=fence_img,anchor = NW)
+            main_canvas.create_image(a,b,image=item,anchor = NW)
 
 def go_start_field(tractor, farm_x, farm_y):
     move_widget(tractor,farm_x,farm_y)
@@ -45,6 +44,8 @@ def main():
     icon = Image("photo", file="textures/tractor.gif")  
     root.tk.call('wm','iconphoto',root._w,icon) #Changes the application icon
     global main_canvas
+    fence_img = PhotoImage(file="textures/fence.gif")#Assigns fence image
+    side_fence = PhotoImage(file="textures/side_fence.gif") #Assigns fence_long image
     main_canvas = Canvas(width =600, height = 400, bg='white')#create canvas
     main_canvas.pack(expand = YES, fill = BOTH)
     bck_img = PhotoImage(file="textures/background.gif")
@@ -62,7 +63,11 @@ def main():
     existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2 = [],[],[],[]
     add_cabbage_field(100,50,int(rw*10),int(rh*10),cabbage_texture)
     add_cabbage_field(300,220,int(rw*10),int(rh*10),cabbage_texture)
-    fence(1,390,int(600),int(1))
+    fence(1,390,int(600),int(10),fence_img)
+    fence(1,5,int(600),int(10),fence_img)
+    fence(1,1,int(10),int(400),side_fence)
+    fence(595,1,int(10),int(400),side_fence)
+
 
     
     print(existing_farms_x1)
@@ -72,9 +77,9 @@ def main():
     vy = 1
     while True:
         x1,y1= main_canvas.coords(tractor1)
-        if (x1+10)> x_max:
+        if (x1+20)> x_max:
             vx=-1
-        if (y1+10)> y_max:
+        if (y1+25)> y_max:
             vy=-1
         if (y1)<y_min:
             vy = 1

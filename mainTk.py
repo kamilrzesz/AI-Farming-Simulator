@@ -41,7 +41,7 @@ def inside_farm(tractor):
         i+=1
     return status
 def collect_cabbage(tractor,farm_x,farm_y, farm_x2, farm_y2,texture,trac_img):
-    """Collects cabbage"""
+    """Collects cabbage function"""
     farm_length = farm_x2 - farm_x
     farm_height = farm_y2 - farm_y
     cabbage_count = 0

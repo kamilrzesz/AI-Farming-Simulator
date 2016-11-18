@@ -67,7 +67,7 @@ def fence(x,y,l,w,item):
 def go_start_field(tractor, farm_x, farm_y):
     move_widget(tractor,farm_x,farm_y)
 def sheep_button():
-    add_sheep(randint(1, 600), randint(1, 400), sheep1)
+    add_sheep(randint(1, 1200), randint(1, 720), sheep1)
 def main():
     global root
     root = Tk()
@@ -94,15 +94,15 @@ def main():
     existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2, existing_farms_type = [],[],[],[],[]
     add_cabbage_field(100,50,(rw*10),(rh*10),cabbage_texture)
     add_cabbage_field(300,220,(rw*10),(rh*10),cabbage_texture)
-    fence(1,390,int(600),int(10),fence_img)
-    fence(1,5,int(600),int(10),fence_img)
-    fence(1,1,int(10),int(400),side_fence)
-    fence(595,1,int(10),int(400),side_fence)
+    fence(1,((y_max)-10),(x_max),int(10),fence_img)
+    fence(1,(y_min)+5,(x_max),int(10),fence_img)
+    fence(1,1,(x_min)+5,(y_max),side_fence)
+    fence(1195,1,(x_min)+5,(y_max),side_fence)
     global sheep1
     sheep1=PhotoImage(file='textures/sheep.gif')
     button = Button(main_canvas, width=30, text = 'Add Sheep', command = sheep_button, bg='light green')
     button.configure(width=10)
-    button1 = main_canvas.create_window(1,400,anchor=NW,window=button)
+    button1 = main_canvas.create_window(1,(y_max)-30,anchor=NW,window=button)
     print(existing_farms_x1)
     tractor_img = PhotoImage(file="textures/tractor_right.gif")
     tractor1 = main_canvas.create_image(300,200,image=tractor_img, anchor = NW) #adding tractor to the canvas

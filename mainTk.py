@@ -31,29 +31,30 @@ def inside_farm(tractor):
         Returns a boolean result. True if tractor is inside a farm.
         i is a global variable, sygnaling which farm the tractor is on, do not reassign else where"""
     x,y= main_canvas.coords(tractor)
-    global i
-    i = 0
-    while i < len(existing_farms_x1):
-        if x > existing_farms_x1[i] and x< existing_farms_x2[i] and y > existing_farms_y1[i] and y<existing_farms_y2[i]:
+    global v
+    v = 0
+    while v < len(existing_farms_x1):
+        if x > existing_farms_x1[v] and x< existing_farms_x2[v] and y > existing_farms_y1[v] and y<existing_farms_y2[v]:
             return True
         else:
             status = False
-        i+=1
+        v+=1
     return status
 def collect_cabbage(tractor,farm_x,farm_y, farm_x2, farm_y2,texture,trac_img):
     """Collects cabbage function"""
     farm_length = farm_x2 - farm_x
     farm_height = farm_y2 - farm_y
+    cabbages=[]
     cabbage_count = 0
     for k in range(0, farm_height,10):
         for w in range(0,farm_length,10):
             move_widget(tractor,farm_x+w,farm_y+k)
             trac_x,trac_y = main_canvas.coords(tractor)
-            main_canvas.create_image(trac_x,trac_y,image=texture, anchor=NW)
+            cabbages.append(main_canvas.create_image(trac_x,trac_y,image=texture, anchor=NW))
             cabbage_count+=1
             print(cabbage_count)
-            time.sleep(0.09)
-    existing_farms_type[i] = "empty"
+            time.sleep(0.1)
+    existing_farms_type[v] = "empty"
     main_canvas.tag_raise(tractor)
     return cabbage_count
 def add_sheep (x,y,item):
@@ -79,13 +80,15 @@ def main():
     side_fence = PhotoImage(file="textures/side_fence.gif") #Assigns fence_long image
     main_canvas = Canvas(width =1200, height = 720, bg='white')#create canvas
     main_canvas.pack(expand = YES, fill = BOTH)
-    bck_img = PhotoImage(file="textures/background.gif")
-    main_canvas.create_image(0,0,image=bck_img,anchor=NW) # Sets background of the window to grass
-    main_canvas.create_image(0,0,image=bck_img,anchor=NW) # Sets background of the window to grass
     x_min = 0 # min and max values used in setting boundaries on the canvas
     y_min= 0  # max values also used in setting starting coordinates for tractor
     x_max=int(main_canvas['width'])
     y_max=int(main_canvas['height'])
+    bck_img = PhotoImage(file="textures/background.gif")
+    main_canvas.create_image(0,0,image=bck_img,anchor=NW) # Sets background of the window to grass
+    barn_img = PhotoImage(file="textures/barn.gif")
+    barn = main_canvas.create_image(x_max-10,y_min+20,image=barn_img,anchor=NE)
+    print(barn)
     rh= randint(8,12)
     rw = randint(10,14)
     global existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2, existing_farms_type
@@ -109,6 +112,7 @@ def main():
     vx = -1
     vy = -1
     cabbages_global = 0
+ 
     while True:
         x1,y1= main_canvas.coords(tractor1)
         if (x1+20)> x_max and inside_farm(tractor1)==False:
@@ -119,11 +123,11 @@ def main():
             vy = 1
         if (x1)<x_min and inside_farm(tractor1)==False:
             vx=1
-        if inside_farm(tractor1) == True and existing_farms_type[i]=="grown":
-            cabbages_global+=collect_cabbage(tractor1, existing_farms_x1[i],existing_farms_y1[i],existing_farms_x2[i],existing_farms_y2[i],dirt_texture,tractor_img)
+        if inside_farm(tractor1) == True and existing_farms_type[v]=="grown":
+            cabbages_global+=collect_cabbage(tractor1, existing_farms_x1[v],existing_farms_y1[v],existing_farms_x2[v],existing_farms_y2[v],dirt_texture,tractor_img)
             print(cabbages_global)
             continue
-        if inside_farm(tractor1) == False or existing_farms_type[i] == "empty":
+        if inside_farm(tractor1) == False or existing_farms_type[v] == "empty":
             move_widget(tractor1, x1+vx, y1+vy)
         time.sleep(0.01)
     mainloop()

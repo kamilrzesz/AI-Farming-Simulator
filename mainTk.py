@@ -86,7 +86,7 @@ def main():
     global main_canvas
     fence_img = PhotoImage(file="textures/fence.gif")#Assigns fence image
     side_fence = PhotoImage(file="textures/side_fence.gif") #Assigns fence_long image
-    main_canvas = Canvas(width =600, height = 400, bg='white')#create canvas
+    main_canvas = Canvas(width =600, height = 425, bg='white')#create canvas
     main_canvas.pack(expand = YES, fill = BOTH)
     bck_img = PhotoImage(file="textures/background.gif")
     main_canvas.create_image(0,0,image=bck_img,anchor=NW) # Sets background of the window to grass
@@ -113,11 +113,11 @@ def main():
 
 
 
-    button = Button(main_canvas, width=30, text = 'Add Sheep', command = sheep_button)
+    button = Button(main_canvas, width=30, text = 'Add Sheep', command = sheep_button, bg='blue')
 
-    button.configure(width=10, )
+    button.configure(width=10)
     
-    button1 = main_canvas.create_window(1,1,anchor=NW,window=button)
+    button1 = main_canvas.create_window(1,400,anchor=NW,window=button)
 
 
 

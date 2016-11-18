@@ -1,6 +1,33 @@
 from tkinter import *
 from random import randint
 import time
+import pyaudio
+import wave
+def sound_bounce():
+    try:           
+        chunk = 1024
+
+        f = wave.open("/Users/Max/Documents/CabbagePatch/AI-Farming-Simulator/Audio/bounce.wav","rb")
+        p = pyaudio.PyAudio()
+
+        stream = p.open(format = p.get_format_from_width(f.getsampwidth()),
+                        channels = f.getnchannels(),
+                        rate = f.getframerate(),
+                        output = True)
+
+        data = f.readframes(chunk)
+
+        while len(data) > 0:
+            stream.write(data)
+            data = f.readframes(chunk)
+
+            stream.stop_stream()
+            stream.close()
+
+            p.terminate()
+    except OSError:
+            print("Hello")
+                
 def move_widget(item, x, y):
     """ Moves a widget(item) on the main canvas to the new coordinates(x,y)"""
     main_canvas.coords(item,x,y)
@@ -112,12 +139,16 @@ def main():
     while True:
         x1,y1= main_canvas.coords(tractor1)
         if (x1+20)> x_max and inside_farm(tractor1)==False:
+            sound_bounce()
             vx=-1
         if (y1+25)> y_max and inside_farm(tractor1)==False:
+            sound_bounce()
             vy=-1
         if (y1)<y_min and inside_farm(tractor1)==False:
+            sound_bounce()
             vy = 1
         if (x1)<x_min and inside_farm(tractor1)==False:
+            sound_bounce()
             vx=1
         if inside_farm(tractor1) == True and existing_farms_type[i]=="grown":
             cabbages_global+=collect_cabbage(tractor1, existing_farms_x1[i],existing_farms_y1[i],existing_farms_x2[i],existing_farms_y2[i],dirt_texture,tractor_img)

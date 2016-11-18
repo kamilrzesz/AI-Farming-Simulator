@@ -72,7 +72,7 @@ def sheep_button():
 def main():
     global root
     root = Tk()
-    icon = Image("photo", file="textures/tractor.gif")  
+    icon = Image("photo", file="textures/tractor_right.gif")  
     root.tk.call('wm','iconphoto',root._w,icon) #Changes the application icon
     global main_canvas
     fence_img = PhotoImage(file="textures/fence.gif")#Assigns fence image
@@ -82,7 +82,6 @@ def main():
     bck_img = PhotoImage(file="textures/background.gif")
     main_canvas.create_image(0,0,image=bck_img,anchor=NW) # Sets background of the window to grass
     main_canvas.create_image(0,0,image=bck_img,anchor=NW) # Sets background of the window to grass
-    tractor_img = PhotoImage(file="textures/tractor.gif")
     x_min = 0 # min and max values used in setting boundaries on the canvas
     y_min= 0  # max values also used in setting starting coordinates for tractor
     x_max=int(main_canvas['width'])
@@ -121,8 +120,8 @@ def main():
         if (x1)<x_min and inside_farm(tractor1)==False:
             vx=1
         if inside_farm(tractor1) == True and existing_farms_type[i]=="grown":
-            collect_cabbage(tractor1, existing_farms_x1[i],existing_farms_y1[i],existing_farms_x2[i],existing_farms_y2[i],dirt_texture,tractor_img)
-            move_widget(tractor1,1,1)
+            cabbages_global+=collect_cabbage(tractor1, existing_farms_x1[i],existing_farms_y1[i],existing_farms_x2[i],existing_farms_y2[i],dirt_texture,tractor_img)
+            print(cabbages_global)
             continue
         if inside_farm(tractor1) == False or existing_farms_type[i] == "empty":
             move_widget(tractor1, x1+vx, y1+vy)

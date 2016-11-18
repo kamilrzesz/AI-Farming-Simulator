@@ -41,6 +41,7 @@ def inside_farm(tractor):
         i+=1
     return status
 def collect_cabbage(tractor,farm_x,farm_y, farm_x2, farm_y2,texture,trac_img):
+    """Collects cabbage"""
     farm_length = farm_x2 - farm_x
     farm_height = farm_y2 - farm_y
     cabbage_count = 0
@@ -50,6 +51,7 @@ def collect_cabbage(tractor,farm_x,farm_y, farm_x2, farm_y2,texture,trac_img):
             trac_x,trac_y = main_canvas.coords(tractor)
             main_canvas.create_image(trac_x,trac_y,image=texture, anchor=NW)
             cabbage_count+=1
+            print(cabbage_count)
             time.sleep(0.09)
     existing_farms_type[i] = "empty"
     main_canvas.tag_raise(tractor)
@@ -91,7 +93,7 @@ def main():
     dirt_texture = PhotoImage(file="textures/dirt.gif")
     cabbage_texture = PhotoImage(file="textures/cabbage.gif")
     existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2, existing_farms_type = [],[],[],[],[]
-    add_cabbage_field(100,50,100,100,cabbage_texture)
+    add_cabbage_field(100,50,(rw*10),(rh*10),cabbage_texture)
     add_cabbage_field(300,220,(rw*10),(rh*10),cabbage_texture)
     fence(1,((y_max)-10),(x_max),int(10),fence_img)
     fence(1,(y_min)+5,(x_max),int(10),fence_img)
@@ -119,10 +121,8 @@ def main():
         if (x1)<x_min and inside_farm(tractor1)==False:
             vx=1
         if inside_farm(tractor1) == True and existing_farms_type[i]=="grown":
-            cabbages_global+=collect_cabbage(tractor1, existing_farms_x1[i],existing_farms_y1[i],existing_farms_x2[i],existing_farms_y2[i],dirt_texture,tractor_img)
-            print(cabbages_global)
+            collect_cabbage(tractor1, existing_farms_x1[i],existing_farms_y1[i],existing_farms_x2[i],existing_farms_y2[i],dirt_texture,tractor_img)
             move_widget(tractor1,1,1)
-            print(existing_farms_type)
             continue
         if inside_farm(tractor1) == False or existing_farms_type[i] == "empty":
             move_widget(tractor1, x1+vx, y1+vy)

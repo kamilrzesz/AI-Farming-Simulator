@@ -16,7 +16,8 @@ def add_cabbage_field(x,y, l, w,item):
     existing_farms_x2.append(x+l)
     existing_farms_y1.append(y)
     existing_farms_y2.append(y+w)
-    print(existing_farms_x1,existing_farms_x2,existing_farms_y1,existing_farms_y2)
+    existing_farms_type.append("grown")
+    print(existing_farms_x1,existing_farms_x2,existing_farms_y1,existing_farms_y2, existing_farms_type)
 def fence(x,y,l,w,item):
     """ Will make fence tileable (used in bottom of page) can be used later for
     animal fencing etc.)"""
@@ -39,7 +40,6 @@ def inside_farm(tractor):
             status = False
         i+=1
     return status
-
 def collect_cabbage(tractor,farm_x,farm_y, farm_x2, farm_y2,texture,trac_img):
     farm_length = farm_x2 - farm_x
     farm_height = farm_y2 - farm_y
@@ -52,28 +52,18 @@ def collect_cabbage(tractor,farm_x,farm_y, farm_x2, farm_y2,texture,trac_img):
             cabbage_count+=1
             print(cabbage_count)
             time.sleep(0.09)
+    existing_farms_type[i] = "empty"
     main_canvas.tag_raise(tractor)
     return cabbage_count
-
 def add_sheep (x,y,item):
     '''This adds an image of a sheep to the canvas'''
     main_canvas.create_image(x,y, image=item, anchor = NW,)
-
-    
-
-
-
-
-    
-    
-
 def fence(x,y,l,w,item):
     """ Will make fence tileable (used in bottom of page) can be used later for
     animal fencing etc.)"""
     for a in range(x,l+x,10):
         for b in range(y,w+y,10):
             main_canvas.create_image(a,b,image=item,anchor = NW)
-
 def go_start_field(tractor, farm_x, farm_y):
     move_widget(tractor,farm_x,farm_y)
 def sheep_button():
@@ -86,7 +76,7 @@ def main():
     global main_canvas
     fence_img = PhotoImage(file="textures/fence.gif")#Assigns fence image
     side_fence = PhotoImage(file="textures/side_fence.gif") #Assigns fence_long image
-    main_canvas = Canvas(width =600, height = 425, bg='white')#create canvas
+    main_canvas = Canvas(width =1200, height = 720, bg='white')#create canvas
     main_canvas.pack(expand = YES, fill = BOTH)
     bck_img = PhotoImage(file="textures/background.gif")
     main_canvas.create_image(0,0,image=bck_img,anchor=NW) # Sets background of the window to grass
@@ -98,10 +88,10 @@ def main():
     y_max=int(main_canvas['height'])
     rh= randint(8,12)
     rw = randint(10,14)
-    global existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2
+    global existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2, existing_farms_type
     dirt_texture = PhotoImage(file="textures/dirt.gif")
     cabbage_texture = PhotoImage(file="textures/cabbage.gif")
-    existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2 = [],[],[],[]
+    existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2, existing_farms_type = [],[],[],[],[]
     add_cabbage_field(100,50,(rw*10),(rh*10),cabbage_texture)
     add_cabbage_field(300,220,(rw*10),(rh*10),cabbage_texture)
     fence(1,390,int(600),int(10),fence_img)
@@ -110,23 +100,9 @@ def main():
     fence(595,1,int(10),int(400),side_fence)
     global sheep1
     sheep1=PhotoImage(file='textures/sheep.gif')
-
-
-
-    button = Button(main_canvas, width=30, text = 'Add Sheep', command = sheep_button, bg='blue')
-
+    button = Button(main_canvas, width=30, text = 'Add Sheep', command = sheep_button, bg='light green')
     button.configure(width=10)
-    
     button1 = main_canvas.create_window(1,400,anchor=NW,window=button)
-
-
-
-
-
-
-    
-    
-
     print(existing_farms_x1)
     tractor_img = PhotoImage(file="textures/tractor_right.gif")
     tractor1 = main_canvas.create_image(300,200,image=tractor_img, anchor = NW) #adding tractor to the canvas
@@ -143,11 +119,11 @@ def main():
             vy = 1
         if (x1)<x_min and inside_farm(tractor1)==False:
             vx=1
-        if inside_farm(tractor1) == True:
+        if inside_farm(tractor1) == True and existing_farms_type[i]=="grown":
             collect_cabbage(tractor1, existing_farms_x1[i],existing_farms_y1[i],existing_farms_x2[i],existing_farms_y2[i],dirt_texture,tractor_img)
             move_widget(tractor1,1,1)
             continue
-        if inside_farm(tractor1) == False:
+        if inside_farm(tractor1) == False or existing_farms_type[i] == "empty":
             move_widget(tractor1, x1+vx, y1+vy)
         time.sleep(0.01)
     mainloop()

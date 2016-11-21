@@ -96,7 +96,6 @@ def main():
     barn = main_canvas.create_image(x_max-10,y_min+20,image=barn_img,anchor=NE)
     rh= randint(8,12)
     rw = randint(10,14)
-<<<<<<< HEAD
     global rh
     global rw
     global existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2, existing_farms_type
@@ -104,12 +103,10 @@ def main():
     cabbage_texture = PhotoImage(file="textures/cabbage.gif")
     global cabbage_texture
     existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2, existing_farms_type = [],[],[],[],[]
-=======
     global existing_farms, sheep1 # existsing farms is list containing a list for each individual farm. Order of items inside the inner list is: x-coord, y-coord, x2-coord, y2-coord, farm_type
     dirt_texture = PhotoImage(file="textures/dirt.gif")
     cabbage_texture = PhotoImage(file="textures/cabbage.gif")
     existing_farms = []
->>>>>>> origin/master
     add_cabbage_field(100,50,(rw*10),(rh*10),cabbage_texture)
     add_cabbage_field(300,220,(rw*10),(rh*10),cabbage_texture)
     fence(1,((y_max)-10),(x_max),int(10),fence_img)
@@ -126,23 +123,17 @@ def main():
     button_haybail.configure(width=10)
     button1 = main_canvas.create_window(1,(y_max)-30,anchor=NW,window=button)
     button2 = main_canvas.create_window(130,(y_max)-30,anchor=NW,window=button_haybail)
-<<<<<<< HEAD
     button3 = main_canvas.create_window(260,(y_max)-30,anchor=NW,window=button_farm)
     print(existing_farms_x1)
-=======
->>>>>>> origin/master
     tractor_img = PhotoImage(file="textures/tractor_right.gif")
     tractor1 = main_canvas.create_image(300,200,image=tractor_img, anchor = NW) #adding tractor to the canvas
     vx = -1
     vy = -1
     cabbages_global = 0
-<<<<<<< HEAD
 
 
-=======
     global_cabbage_var = StringVar()
     Label(root, textvariable=global_cabbage_var).pack()
->>>>>>> origin/master
     while True:
         x1,y1= main_canvas.coords(tractor1)
         if (x1+20)> x_max and inside_farm(tractor1)==False:
@@ -161,10 +152,7 @@ def main():
         if inside_farm(tractor1) == False or existing_farms[v][4] == "empty":
             move_widget(tractor1, x1+vx, y1+vy)
 
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
         time.sleep(0.01)
     mainloop()
 main()

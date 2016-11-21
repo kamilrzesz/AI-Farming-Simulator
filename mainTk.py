@@ -13,12 +13,8 @@ def add_cabbage_field(x,y, l, w,item):
     for i in range(x,l+x,10):
         for k in range(y,w+y,10):
             main_canvas.create_image(i,k,image=item, anchor = NW)
-    existing_farms_x1.append(x)
-    existing_farms_x2.append(x+l)
-    existing_farms_y1.append(y)
-    existing_farms_y2.append(y+w)
-    existing_farms_type.append("grown")
-    print(existing_farms_x1,existing_farms_x2,existing_farms_y1,existing_farms_y2, existing_farms_type)
+    existing_farms.append([x,x+l,y,y+w,"grown"])
+    print(existing_farms)
 def fence(x,y,l,w,item):
     """ Will make fence tileable (used in bottom of page) can be used later for
     animal fencing etc.)"""
@@ -34,28 +30,29 @@ def inside_farm(tractor):
     x,y= main_canvas.coords(tractor)
     global v
     v = 0
-    while v < len(existing_farms_x1):
-        if x > existing_farms_x1[v] and x< existing_farms_x2[v] and y > existing_farms_y1[v] and y<existing_farms_y2[v]:
+    while v < len(existing_farms):
+        if x > existing_farms[v][0] and x< existing_farms[v][1] and y > existing_farms[v][2] and y<existing_farms[v][3]:
             return True
         else:
             status = False
         v+=1
     return status
-def collect_cabbage(tractor,farm_x,farm_y, farm_x2, farm_y2,texture,trac_img):
+def collect_cabbage(tractor,farm,texture,trac_img):
     """Collects cabbage function"""
-    farm_length = farm_x2 - farm_x
-    farm_height = farm_y2 - farm_y
-    cabbages=[]
+    farm_length = farm[1] - farm[0]
+    farm_height = farm[3] - farm[2]
     cabbage_count = 0
+    local_cab_var = StringVar()
+    Label(root, textvariable=local_cab_var).pack()
     for k in range(0, farm_height,10):
         for w in range(0,farm_length,10):
-            move_widget(tractor,farm_x+w,farm_y+k)
+            move_widget(tractor,farm[0]+w,farm[2]+k)
             trac_x,trac_y = main_canvas.coords(tractor)
-            cabbages.append(main_canvas.create_image(trac_x,trac_y,image=texture, anchor=NW))
+            main_canvas.create_image(trac_x,trac_y,image=texture, anchor=NW)
             cabbage_count+=1
-            print(cabbage_count)
+            local_cab_var.set("Tractor cabbages: "+str(cabbage_count))
             time.sleep(0.1)
-    existing_farms_type[v] = "empty"
+    existing_farms[v][4] = "empty"
     main_canvas.tag_raise(tractor)
     return cabbage_count
 def add_sheep (x,y,item):
@@ -97,9 +94,9 @@ def main():
     main_canvas.create_image(0,0,image=bck_img,anchor=NW) # Sets background of the window to grass
     barn_img = PhotoImage(file="textures/barn.gif")
     barn = main_canvas.create_image(x_max-10,y_min+20,image=barn_img,anchor=NE)
-    print(barn)
     rh= randint(8,12)
     rw = randint(10,14)
+<<<<<<< HEAD
     global rh
     global rw
     global existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2, existing_farms_type
@@ -107,13 +104,18 @@ def main():
     cabbage_texture = PhotoImage(file="textures/cabbage.gif")
     global cabbage_texture
     existing_farms_x1,existing_farms_x2, existing_farms_y1, existing_farms_y2, existing_farms_type = [],[],[],[],[]
+=======
+    global existing_farms, sheep1 # existsing farms is list containing a list for each individual farm. Order of items inside the inner list is: x-coord, y-coord, x2-coord, y2-coord, farm_type
+    dirt_texture = PhotoImage(file="textures/dirt.gif")
+    cabbage_texture = PhotoImage(file="textures/cabbage.gif")
+    existing_farms = []
+>>>>>>> origin/master
     add_cabbage_field(100,50,(rw*10),(rh*10),cabbage_texture)
     add_cabbage_field(300,220,(rw*10),(rh*10),cabbage_texture)
     fence(1,((y_max)-10),(x_max),int(10),fence_img)
     fence(1,(y_min)+5,(x_max),int(10),fence_img)
     fence(1,1,(x_min)+5,(y_max),side_fence)
     fence(1195,1,(x_min)+5,(y_max),side_fence)
-    global sheep1
     sheep1=PhotoImage(file='textures/sheep.gif')
     haybail = PhotoImage(file="textures/hay_bail.gif")
     global haybail
@@ -124,15 +126,23 @@ def main():
     button_haybail.configure(width=10)
     button1 = main_canvas.create_window(1,(y_max)-30,anchor=NW,window=button)
     button2 = main_canvas.create_window(130,(y_max)-30,anchor=NW,window=button_haybail)
+<<<<<<< HEAD
     button3 = main_canvas.create_window(260,(y_max)-30,anchor=NW,window=button_farm)
     print(existing_farms_x1)
+=======
+>>>>>>> origin/master
     tractor_img = PhotoImage(file="textures/tractor_right.gif")
     tractor1 = main_canvas.create_image(300,200,image=tractor_img, anchor = NW) #adding tractor to the canvas
     vx = -1
     vy = -1
     cabbages_global = 0
+<<<<<<< HEAD
 
 
+=======
+    global_cabbage_var = StringVar()
+    Label(root, textvariable=global_cabbage_var).pack()
+>>>>>>> origin/master
     while True:
         x1,y1= main_canvas.coords(tractor1)
         if (x1+20)> x_max and inside_farm(tractor1)==False:
@@ -143,15 +153,18 @@ def main():
             vy = 1
         if (x1)<x_min and inside_farm(tractor1)==False:
             vx=1
-        if inside_farm(tractor1) == True and existing_farms_type[v]=="grown":
-            cabbages_global+=collect_cabbage(tractor1, existing_farms_x1[v],existing_farms_y1[v],existing_farms_x2[v],existing_farms_y2[v],dirt_texture,tractor_img)
+        if inside_farm(tractor1) == True and existing_farms[v][4]=="grown":
+            cabbages_global+=collect_cabbage(tractor1, existing_farms[v],dirt_texture,tractor_img)
             print(cabbages_global)
+            global_cabbage_var.set("Global cabbages: "+str(cabbages_global))
             continue
-        if inside_farm(tractor1) == False or existing_farms_type[v] == "empty":
+        if inside_farm(tractor1) == False or existing_farms[v][4] == "empty":
             move_widget(tractor1, x1+vx, y1+vy)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
         time.sleep(0.01)
     mainloop()
 main()
-

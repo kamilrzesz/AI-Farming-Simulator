@@ -98,7 +98,7 @@ def go_to_barn(tractor):
             unload_cabbages()
             return None
         move_widget(tractor, trac_x + vx, trac_y + vy)
-        time.sleep(0.00001)
+        time.sleep(0.01)
 
 
 def unload_cabbages():
@@ -121,6 +121,7 @@ def collect_cabbage(tractor, farm, texture, trac_img):
             main_canvas.create_image(trac_x, trac_y, image=texture, anchor=NW)
             cabbage_count += 1
             local_cab_var.set("Tractor cabbages: " + str(cabbage_count))
+            time.sleep(0.05)
     existing_farms[v][4] = "empty"
     main_canvas.tag_raise(tractor)
     go_to_barn(tractor)
@@ -200,8 +201,7 @@ def sheep_button():
     add_sheep(randint(50, 1150), randint(50, 650), sheep1)
 
 
-"""Addin things to the scence(Fences,CabbageFields)"""
-
+"""Adding things to the canvas(Fences,CabbageFields) at the beginning"""
 
 def add_things_canvas():
     add_cabbage_field(100, 50, (rw * 10), (rh * 10), cabbage_texture, tractor)
@@ -239,8 +239,6 @@ def main():
 
 
 """ Boundaries detection"""
-
-
 def boundaries_detect():
     global vx, vy
     cabbages_global = 0

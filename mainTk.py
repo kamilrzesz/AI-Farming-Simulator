@@ -67,8 +67,7 @@ def inside_farm(tractor):
     global v
     v = 0
     while v < len(existing_farms):
-        if x > existing_farms[v][0] and x < existing_farms[v][1] and y > existing_farms[v][2] and y < existing_farms[v][
-            3]:
+        if x > existing_farms[v][0] and x < existing_farms[v][1] and y > existing_farms[v][2] and y < existing_farms[v][3]:
             return True
         v += 1
     return status
@@ -166,8 +165,7 @@ def add_hay(x, y, item):
     s = 0
     for s in range(0, len(existing_farms)):
         ''' This code below will make sure hay bales dont spawn on top of eachother'''
-        if x > existing_farms[s][0] and x < existing_farms[s][1] and y > existing_farms[s][2] and y < existing_farms[s][
-            3]:
+        if x > existing_farms[s][0] and x < existing_farms[s][1] and y > existing_farms[s][2] and y < existing_farms[s][3]:
             add_hay(randint(50, 1150), randint(50, 650), haybail)
             return None
     main_canvas.create_image(x, y, image=item, anchor=NW)
@@ -216,7 +214,7 @@ def add_things_canvas():
 
 def main():
     global main_canvas, tractor, x_max, y_max, barn, fence_img
-    """Main function to make canvas and multiple things in it, also includes multiple variables and imports of images etc."""
+    """Main function to create canvas and a few things in it"""
     root.tk.call('wm', 'iconphoto', root._w, icon)  # Changes the application icon
     main_canvas = Canvas(width=1200, height=720, bg='white')
     x_max = int(main_canvas['width'])
@@ -236,6 +234,7 @@ def main():
     Label(root, textvariable=global_cabbage_var).pack()
     '''Calls upon add_things_function above'''
     add_things_canvas()
+    boundaries_detect()
     return
 
 
@@ -271,4 +270,3 @@ def boundaries_detect():
 
 
 main()
-boundaries_detect()

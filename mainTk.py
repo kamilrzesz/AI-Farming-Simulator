@@ -81,6 +81,14 @@ def add_sheep (x,y,item):
 
    
 def add_hay (x,y,item):
+    s = 0
+    for s in range(0, len(existing_farms)):
+        if x > existing_farms[s][0] and x < existing_farms[s][1] and y > existing_farms[s][2] and y < existing_farms[s][3]:
+            add_hay(randint(50, 1150), randint(50, 650), haybail)
+            return None
+    main_canvas.create_image(x,y,image=item,anchor=NW)
+            
+
     main_canvas.create_image(x,y,image=item,anchor = NW)
     
 def fence(x,y,l,w,item):

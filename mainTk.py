@@ -37,6 +37,9 @@ def inside_farm(tractor):
             status = False
         v+=1
     return status
+
+
+
 def collect_cabbage(tractor,farm,texture,trac_img):
     """Collects cabbage function"""
     farm_length = farm[1] - farm[0]
@@ -55,27 +58,51 @@ def collect_cabbage(tractor,farm,texture,trac_img):
     existing_farms[v][4] = "empty"
     main_canvas.tag_raise(tractor)
     return cabbage_count
+
 def add_sheep (x,y,item):
     '''This adds an image of a sheep to the canvas'''
-    main_canvas.create_image(x,y, image=item, anchor = NW,)
+    s = 0
+    for s in range(0, len(existing_farms)):
+        #If statement makes sure that the sheep does not spawn on a cabbage patch
+        if x > existing_farms[s][0] and x < existing_farms[s][1] and y > existing_farms[s][2] and y<existing_farms[s][3]:
+            #recur the function, it will keep recuring until the coordinates are not on a cabbage patch.
+            add_sheep(randint(50, 1150), randint(50, 650), sheep1)
+            return None
+            #add a sheep to the canvas once the x and y coordinates do not clash with a cabbage patch
+    main_canvas.create_image(x,y, image = item, anchor = NW)
+
+
+#def random_point_within_patch(patch):
+#    #start a loop for each cabbage patch in the farm by using the length of the existing farms list
+#    patchN = 0
+#    while patchN < len(existing_farms):
+#        #create the boundaries of 
+#        existing_farms[patchN][0],existing_farms[patchN][1],existing_farms[patchN][2],existing_farms[patchN][3]
+
+   
 def add_hay (x,y,item):
     main_canvas.create_image(x,y,image=item,anchor = NW)
+    
 def fence(x,y,l,w,item):
     """ Will make fence tileable (used in bottom of page) can be used later for
     animal fencing etc.)"""
     for a in range(x,l+x,10):
         for b in range(y,w+y,10):
             main_canvas.create_image(a,b,image=item,anchor = NW)
+            
 def farm_button():
     '''Adds more farms when button is pressed'''
     add_cabbage_field (randint(100, 1100),randint(50,600),(rw * 10), (rh * 10),cabbage_texture )
 
 def hay_button():
     add_hay(randint(50,1150), randint(50, 650),haybail)
+    
 def go_start_field(tractor, farm_x, farm_y):
     move_widget(tractor,farm_x,farm_y)
+    
 def sheep_button():
     add_sheep(randint(50, 1150), randint(50, 650), sheep1)
+    
 def main():
     global root
     root = Tk()

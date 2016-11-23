@@ -154,7 +154,7 @@ haybail = PhotoImage(file="textures/hay_bail.gif")
 
 
 """All the variables are in this section"""
-existing_farms = []
+existing_farms, existing_sheep, existing_sheep_widget = [], [], []   
 
 
 
@@ -175,7 +175,7 @@ def main():
     barn = main_canvas.create_image(x_max-10,y_min+20,image=barn_img,anchor=NE)
     rh= randint(8,12)
     rw = randint(10,14)
-    global existing_farms, sheep1 # existsing farms is list containing a list for each individual farm. Order of items inside the inner list is: x-coord, y-coord, x2-coord, y2-coord, farm_type
+    global existing_farms, sheep1, existing_sheep, existing_sheep_widget # existsing farms is list containing a list for each individual farm. Order of items inside the inner list is: x-coord, y-coord, x2-coord, y2-coord, farm_type
     add_cabbage_field(100,50,(rw*10),(rh*10),cabbage_texture,tractor1)
     add_cabbage_field(300,220,(rw*10),(rh*10),cabbage_texture,tractor1)
     fence(1,((y_max)-10),(x_max),int(10),fence_img)

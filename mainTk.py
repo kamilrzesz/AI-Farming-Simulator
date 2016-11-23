@@ -35,15 +35,10 @@ def sheep_movement():
     print(main_canvas.coords(existing_sheep_widget))
     for p in range(0, len(existing_sheep)):
         x1, y1 = main_canvas.coords(existing_sheep_widget[p])
-        if (x1+12)> x_max1 :
-            vx = randint(-1,1)
-        if (y1+9)> y_max1:
-            vy = randint(-1,1)
-        if (y1)<y_min1:
-            vy =randint(-1,1)
-        if (x1)<x_min1:
-            vx = randint(-1,1)
+        vx=randint(-10,10)
+        vy=randint(-10,10)
         move_widget(existing_sheep_widget[p],(x1+vx),(y1+vy))
+        
 
 def inside_farm(tractor):
     """ Checks if the tractor is inside the farm.

@@ -25,6 +25,26 @@ def fence(x,y,l,w,item):
         for b in range(y,w+y):
             main_canvas.create_image(a,b,image=item,anchor = NW)
 
+def sheep_movement():
+    vx = 1
+    vy = 1
+    x_min = 0 # min and max values used in setting boundaries on the canvas
+    y_min= 0  # max values also used in setting starting coordinates for tractor
+    x_max=int(main_canvas['width'])
+    y_max=int(main_canvas['height'])
+    while True:
+        for p in range(0, len(existing_sheep)):
+            x1, y1 = main_canvas.coords(existing_sheep_widget[p])
+            if (x1+12)> x_max:
+                vx=-1
+            if (y1+9)> y_max:
+                vy=-1
+            if (y1)<y_min:
+                vy = 1
+            if (x1)<x_min:
+                vx=1
+            move_widget(existing_sheep_widget[p],x1+vx,y1+vy)
+
 def inside_farm(tractor):
     """ Checks if the tractor is inside the farm.
         More specifically it checks if the top left coordinate is inside the area marked by any of the cabbage fields
@@ -66,7 +86,7 @@ def go_to_barn(tractor):
             unload_cabbages()
             return None
         move_widget(tractor,trac_x+vx,trac_y+vy)
-        time.sleep(0.00001)
+        time.sleep(0.01)
 
 def unload_cabbages():
     """ Function to display cabbages deposited to the barn on screen for the user to read"""
@@ -95,6 +115,7 @@ def collect_cabbage(tractor,farm,texture,trac_img):
 def add_sheep (x,y,item):
     '''This adds an image of a sheep to the canvas'''
     s = 0
+    
     for s in range(0, len(existing_farms)):
         #If statement makes sure that the sheep does not spawn on a cabbage patch
         if x > existing_farms[s][0] and x < existing_farms[s][1] and y > existing_farms[s][2] and y<existing_farms[s][3]:
@@ -196,6 +217,7 @@ def main():
     global_cabbage_var = StringVar()
     Label(root, textvariable=global_cabbage_var).pack()
     while True:
+        
         x1,y1= main_canvas.coords(tractor1)
         if (x1+20)> x_max and inside_farm(tractor1)==False:
             vx=-1
@@ -213,7 +235,8 @@ def main():
         if inside_farm(tractor1) == False or existing_farms[v][4] == "empty":
             move_widget(tractor1, x1+vx, y1+vy)
 
-
-        time.sleep(0.000001)
+        sheep_movement()
+        time.sleep(0.01)
+    
     mainloop()
 main()

@@ -11,12 +11,12 @@ def add_cabbage_field(x,y, l, w,item,tractor):
     """ Top left conner of the farm is at coordinates (x,y)
         Creates a farm with the width of 'w' and length of 'l'
         l and w has to be in multiples of 10 """
-    for i in range(x,l+x,10):
-        for k in range(y,w+y,10):
-            main_canvas.create_image(i,k,image=item, anchor = NW)
-    existing_farms.append([x,x+l,y,y+w,"grown"])
-    print(existing_farms)
-    main_canvas.tag_raise(tractor)
+    for i in range(x,l+x,10):#from x to l there is a step adding 10 pixels each time til it gets to x+l
+        for k in range(y,w+y,10):#does the same but for y coord Both for loops create boxes for the cabbages to be placed (for every iteration a box is created)
+            main_canvas.create_image(i,k,image=item, anchor = NW)#adds box at the coords (i and k are passed on with the image of items passed on)
+    existing_farms.append([x,x+l,y,y+w,"grown"])#adds the coordinates all x and y coords to the farm (all coords of the corners) and adds stutus'grown' so later we know that the tractor doesnt have to plough the field again
+    print(existing_farms)#prints the list of existing farms
+    main_canvas.tag_raise(tractor)#raises the tractor so it is always visible above the farms
 
 def fence(x,y,l,w,item):
     """ Will make fence tileable (used in bottom of page) can be used later for
@@ -51,42 +51,42 @@ def inside_farm(tractor):
         on the screen, if they were added using add_cabbage_field function
         Returns a boolean result. True if tractor is inside a farm.
         v is a global variable, signaling which farm the tractor is on, do not reassign else where"""
-    x,y= main_canvas.coords(tractor)
-    global v
-    v = 0
-    while v < len(existing_farms):
-        if x > existing_farms[v][0] and x< existing_farms[v][1] and y > existing_farms[v][2] and y<existing_farms[v][3]:
+    x,y= main_canvas.coords(tractor)#attributes require you to pass the tractor through you we can get the coords of the tractor
+    global v#indicates what farm the tractor is inside so if it returns true, v will be used to collect cabbages so we know what farm to collect cabbages from
+    v = 0# the first index of the farm is 0 - checks the first farm
+    while v < len(existing_farms):#every time it iterates it adds 1 - if v is smaller than length of existing farms, tells u to perform the code below so it checks every single farm
+        if x > existing_farms[v][0] and x< existing_farms[v][1] and y > existing_farms[v][2] and y<existing_farms[v][3]:#if the x and y coords of the tractor are inside the farm (stops the function and returns true)
             return True
         else:
-            status = False
-        v+=1
+            status = False#else makes the status false and at the end if the while loop ennds  and the tractor wasnt inside the farms, it will return the status(which is false) this means the tractor is not inside the farm
+        v+=1#means v = v+1  -moves on to check if the tractor is in the next farm
     return status
-def go_to_barn(tractor):
+def go_to_barn(tractor):#all it wants is the tractor so we can extract its exact current coords
     """ Function for tractor to go to the barn"""
-    vx=1
-    vy=1
-    while True:
-        trac_x,trac_y = main_canvas.coords(tractor)
-        barn_x,barn_y = main_canvas.coords(barn)
-        barn_x-=55
-        barn_y+=30
+    vx=1#velocity of x
+    vy=1#velocity of y - how much it will move by in every loop iteration in the y direction
+    while True:#this loop happens all the time
+        trac_x,trac_y = main_canvas.coords(tractor)#gets the coords of tractor
+        barn_x,barn_y = main_canvas.coords(barn)#gets the coords of the barn
+        barn_x-=55#reduces the x coords of the barn by 55 (where we want the tractor to stop)
+        barn_y+=30#reduces the y coords of the barn by 30 (where we want the tractor to stop)
         if trac_x<barn_x:
-            vx=1
+            vx=1#velocity of x is 1 - we want to increase by 1 becasue we want it to move towards the barn
         if trac_x>barn_x:
-            vx=-1
+            vx=-1#same as before, but if the x coord is larger and we want to make it smaller by 1
         if trac_x==barn_x:
-            vx=0
+            vx=0#if the x ccord is the same as barn x - x velocity is zero, stopping it from moving in x plane, makes it move only in the y axis if needed
         if trac_y<barn_y:
-            vy=1
+            vy=1#exactly what we did for x, but with y
         if trac_y>barn_y:
-            vy=-1
+            vy=-1#if y is bigger than 1, we minus one to the current coordinate 
         if trac_y==barn_y:
-            vy=0
+            vy=0#if the y coord is equal, stays the same and moves in the x axis
         if trac_x==barn_x and trac_y==barn_y:
-            unload_cabbages()
+            unload_cabbages()#if both x and y of the tractor are equal to the x and y of the barn, it will return none and exits the function
             return None
-        move_widget(tractor,trac_x+vx,trac_y+vy)
-        time.sleep(0.01)
+        move_widget(tractor,trac_x+vx,trac_y+vy)#moves the tractor by the velocity we received from the if statements
+        time.sleep(0.01)#stops the tractor between each iteration of the loop so we can see the prgress of the tractor better
 
 def unload_cabbages():
     """ Function to display cabbages deposited to the barn on screen for the user to read"""

@@ -1,6 +1,7 @@
 from tkinter import *
 from random import randint
 import time
+root = Tk()
 
 def move_widget(item, x, y):
     """ Moves a widget(item) on the main canvas to the new coordinates(x,y)"""
@@ -16,12 +17,14 @@ def add_cabbage_field(x,y, l, w,item,tractor):
     existing_farms.append([x,x+l,y,y+w,"grown"])
     print(existing_farms)
     main_canvas.tag_raise(tractor)
+
 def fence(x,y,l,w,item):
     """ Will make fence tileable (used in bottom of page) can be used later for
     animal fencing etc.)"""
     for a in range(x,l+x):
         for b in range(y,w+y):
             main_canvas.create_image(a,b,image=item,anchor = NW)
+
 def inside_farm(tractor):
     """ Checks if the tractor is inside the farm.
         More specifically it checks if the top left coordinate is inside the area marked by any of the cabbage fields
@@ -39,6 +42,7 @@ def inside_farm(tractor):
         v+=1
     return status
 def go_to_barn(tractor):
+    """ Function for tractor to go to the barn"""
     vx=1
     vy=1
     while True:
@@ -63,12 +67,14 @@ def go_to_barn(tractor):
             return None
         move_widget(tractor,trac_x+vx,trac_y+vy)
         time.sleep(0.00001)
+
 def unload_cabbages():
+    """ Function to display cabbages deposited to the barn on screen for the user to read"""
     time.sleep(5)
     print("csha")
 
 def collect_cabbage(tractor,farm,texture,trac_img):
-    """Collects cabbage function"""
+    """Collects cabbage from farms it comes across function"""
     farm_length = farm[1] - farm[0]
     farm_height = farm[3] - farm[2]
     cabbage_count = 0
@@ -101,8 +107,10 @@ def add_sheep (x,y,item):
 
    
 def add_hay (x,y,item):
+    """ Add hay images to the canvas at random locations function"""
     s = 0
     for s in range(0, len(existing_farms)):
+        ''' This code below will make sure hay bales dont spawn on top of eachother'''
         if x > existing_farms[s][0] and x < existing_farms[s][1] and y > existing_farms[s][2] and y < existing_farms[s][3]:
             add_hay(randint(50, 1150), randint(50, 650), haybail)
             return None
@@ -119,51 +127,61 @@ def fence(x,y,l,w,item):
 def farm_button(tractor):
     '''Adds more farms when button is pressed'''
     add_cabbage_field (randint(100, 1100),randint(50,600),(rw * 10), (rh * 10),cabbage_texture,tractor)
+
 def hay_button():
+    """Button for connecting the button being pressed by the user to the function to create the hay on the screen"""
     add_hay(randint(50,1150), randint(50, 650),haybail)
     
 def go_start_field(tractor, farm_x, farm_y):
+    """Function to go to the start of the farm to start cropping the contents of it"""
     move_widget(tractor,farm_x,farm_y)
     
 def sheep_button():
+    """ Button to connect button being pressed by the user to function to draw the sheep on the screen"""
     add_sheep(randint(50, 1150), randint(50, 650), sheep1)
-    
+
+""" All the imported images are in this section"""
+fence_img = PhotoImage(file="textures/fence.gif")#Assigns fence image
+side_fence = PhotoImage(file="textures/side_fence.gif") #Assigns fence_long image
+tractor_img = PhotoImage(file="textures/tractor_right.gif")
+bck_img = PhotoImage(file="textures/background.gif")
+barn_img = PhotoImage(file="textures/barn.gif")
+dirt_texture = PhotoImage(file="textures/dirt.gif")
+cabbage_texture = PhotoImage(file="textures/cabbage.gif")
+sheep1=PhotoImage(file='textures/sheep.gif')
+haybail = PhotoImage(file="textures/hay_bail.gif")
+"""---------------------------------------------------------------------------------------------------------"""
+
+
+"""All the variables are in this section"""
+existing_farms = []
+
+
+
 def main():
+    """Main function to make canvas and multiple things in it, also includes multiple variables and imports of images etc."""
     global root,barn, rw,rh
-    root = Tk()
-    icon = Image("photo", file="textures/tractor_right.gif")  
+    icon = Image("photo", file="textures/tractor_right.gif")
     root.tk.call('wm','iconphoto',root._w,icon) #Changes the application icon
     global main_canvas, haybail, cabbage_texture
-    fence_img = PhotoImage(file="textures/fence.gif")#Assigns fence image
-    side_fence = PhotoImage(file="textures/side_fence.gif") #Assigns fence_long image
     main_canvas = Canvas(width =1200, height = 720, bg='white')#create canvas
     main_canvas.pack(expand = YES, fill = BOTH)
     x_min = 0 # min and max values used in setting boundaries on the canvas
     y_min= 0  # max values also used in setting starting coordinates for tractor
     x_max=int(main_canvas['width'])
     y_max=int(main_canvas['height'])
-    tractor_img = PhotoImage(file="textures/tractor_right.gif")
     tractor1 = main_canvas.create_image(300,200,image=tractor_img, anchor = NW) #adding tractor to the canvas
-    bck_img = PhotoImage(file="textures/background.gif")
     main_canvas.create_image(0,0,image=bck_img,anchor=NW) # Sets background of the window to grass
-    barn_img = PhotoImage(file="textures/barn.gif")
     barn = main_canvas.create_image(x_max-10,y_min+20,image=barn_img,anchor=NE)
     rh= randint(8,12)
     rw = randint(10,14)
-    dirt_texture = PhotoImage(file="textures/dirt.gif")
-    cabbage_texture = PhotoImage(file="textures/cabbage.gif")
     global existing_farms, sheep1 # existsing farms is list containing a list for each individual farm. Order of items inside the inner list is: x-coord, y-coord, x2-coord, y2-coord, farm_type
-    dirt_texture = PhotoImage(file="textures/dirt.gif")
-    cabbage_texture = PhotoImage(file="textures/cabbage.gif")
-    existing_farms = []
     add_cabbage_field(100,50,(rw*10),(rh*10),cabbage_texture,tractor1)
     add_cabbage_field(300,220,(rw*10),(rh*10),cabbage_texture,tractor1)
     fence(1,((y_max)-10),(x_max),int(10),fence_img)
     fence(1,(y_min)+5,(x_max),int(10),fence_img)
     fence(1,1,(x_min)+5,(y_max),side_fence)
     fence(1195,1,(x_min)+5,(y_max),side_fence)
-    sheep1=PhotoImage(file='textures/sheep.gif')
-    haybail = PhotoImage(file="textures/hay_bail.gif")
     button = Button(main_canvas, width=30, text = 'Add Sheep', command = sheep_button, bg='light green')
     button_haybail = Button(main_canvas, width=30, text = "Add Hay Bails", command=hay_button)
     button_farm = Button(main_canvas, width=30, text = 'Add Farm',command=lambda:farm_button(tractor1))

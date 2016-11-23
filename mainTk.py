@@ -28,22 +28,22 @@ def fence(x,y,l,w,item):
 def sheep_movement():
     vx = 1
     vy = 1
-    x_min = 0 # min and max values used in setting boundaries on the canvas
-    y_min= 0  # max values also used in setting starting coordinates for tractor
-    x_max=int(main_canvas['width'])
-    y_max=int(main_canvas['height'])
-    while True:
-        for p in range(0, len(existing_sheep)):
-            x1, y1 = main_canvas.coords(existing_sheep_widget[p])
-            if (x1+12)> x_max:
-                vx=-1
-            if (y1+9)> y_max:
-                vy=-1
-            if (y1)<y_min:
-                vy = 1
-            if (x1)<x_min:
-                vx=1
-            move_widget(existing_sheep_widget[p],x1+vx,y1+vy)
+    x_min1 = 0 # min and max values used in setting boundaries on the canvas
+    y_min1 = 0  # max values also used in setting starting coordinates for tractor
+    x_max1 = int(main_canvas['width'])
+    y_max1 = int(main_canvas['height'])
+    
+    for p in range(0, len(existing_sheep)):
+        x1, y1 = main_canvas.coords(existing_sheep_widget[p])
+        if (x1+12)> x_max1 and inside_farm(existing_sheep_widget):
+            vx = -1
+        if (y1+9)> y_max1:
+            vy = -1
+        if (y1)<y_min1:
+            vy = 1
+        if (x1)<x_min1:
+            vx = 1
+        move_widget(existing_sheep_widget[p],(x1+vx),(y1+vy))
 
 def inside_farm(tractor):
     """ Checks if the tractor is inside the farm.
@@ -123,8 +123,8 @@ def add_sheep (x,y,item):
             add_sheep(randint(50, 1150), randint(50, 650), sheep1)
             return None
             #add a sheep to the canvas once the x and y coordinates do not clash with a cabbage patch
-    main_canvas.create_image(x,y, image = item, anchor = NW)
-
+    existing_sheep_widget.append(main_canvas.create_image(x,y, image = item, anchor = NW))
+    existing_sheep.append([x,y])
 
    
 def add_hay (x,y,item):

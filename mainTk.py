@@ -19,15 +19,18 @@ icon = Image("photo", file="textures/tractor_right.gif")
 """---------------------------------------------------------------------------------------------------------"""
 
 """All the variables are in this section"""
-global barn, trac_x, barn_x, trac_y, barn_y, tractor, rw, rh, existing_farms, x_max, y_max, vx, vy, x_min, y_min, global_cabbage_var
+global barn, trac_x, barn_x, trac_y, barn_y, tractor, rw, rh, existing_farms, x_max, y_max, vx, vy, x_min, y_min, barn_cabbage_var,tractor_cabbage_var
 x_min = 0  # min and max values used in setting boundaries on the canvas
-y_min = 0  # max values also used in setting starting coordinates for tractor    global_cabbage_var = StringVar()
+y_min = 0  # max values also used in setting starting coordinates for tractor    
 existing_farms,existing_sheep,existing_sheep_widget = [], [], [] # existsing farms is list containing a list for each individual farm. Order of items inside the inner list is: x-coord, y-coord, x2-coord, y2-coord, farm_type
+farm_coords = [[20,20,100,120],[20,160,220,160],[20,330,100,180],[20,540,100,80],[20,640,300,60],[140,20,100,50],[140,80,100,60],[140,340,100,210],[140,560,200,60],[260,20,180,190],[260,220,100,80],[370,220,150,80],[260,320,260,220],[350,560,170,140],[540,220,120,120],[680,220,220,120],[740,360,100,180],[540,610,250,90],[850,360,240,80],[850,450,340,80],[1100,150,90,290],[920,150,160,200]]
+fenced_area=[[460,0,440,200],[540,360,180,230],[800,550,400,160]]
 vx = -1
 vy = -1
 rh = randint(8, 12)
 rw = randint(10, 14)
-global_cabbage_var = StringVar()
+barn_cabbage_var = StringVar()
+tractor_cabbage_var = StringVar()
 
 
 def move_widget(item, x, y):
@@ -44,12 +47,11 @@ def add_cabbage_field(x, y, l, w, item, tractor):
         for k in range(y, w + y, 10):
             main_canvas.create_image(i, k, image=item, anchor=NW)
     existing_farms.append([x, x + l, y, y + w, "grown"])
-    print(existing_farms)
     main_canvas.tag_raise(tractor)
 
 
 def fence(x, y, l, w, item):
-    """ Will make fence tileable (used in bottom of page) can be used later for
+    """ Will make fence tileable (used in bottom of page) be used later for
     animal fencing etc.)"""
     for a in range(x, l + x):
         for b in range(y, w + y):
@@ -98,13 +100,18 @@ def go_to_barn(tractor):
             unload_cabbages()
             return None
         move_widget(tractor, trac_x + vx, trac_y + vy)
+        sheep_movement()
         time.sleep(0.01)
 
 
 def unload_cabbages():
-    """ Function to display cabbages deposited to the barn on screen for the user to read"""
-    time.sleep(5)
-    print("csha")
+    """ Function to display cabbages deposited to the barn on screen for the user to read
+        Tractor waits a random amount of time to unload the cabbages, before returning to his task"""
+    while True:
+        if randint(0,20)==1:
+            tractor_cabbage_var.set("Tractor cabbages: " +str(0))
+            return None
+        time.sleep(0.1)
 
 
 def collect_cabbage(tractor, farm, texture, trac_img):
@@ -112,15 +119,14 @@ def collect_cabbage(tractor, farm, texture, trac_img):
     farm_length = farm[1] - farm[0]
     farm_height = farm[3] - farm[2]
     cabbage_count = 0
-    local_cab_var = StringVar()
-    Label(root, textvariable=local_cab_var).pack()
     for k in range(0, farm_height, 10):
         for w in range(0, farm_length, 10):
             move_widget(tractor, farm[0] + w, farm[2] + k)
             trac_x, trac_y = main_canvas.coords(tractor)
             main_canvas.create_image(trac_x, trac_y, image=texture, anchor=NW)
             cabbage_count += 1
-            local_cab_var.set("Tractor cabbages: " + str(cabbage_count))
+            tractor_cabbage_var.set("Tractor cabbages: " + str(cabbage_count))
+            sheep_movement()
             time.sleep(0.05)
     existing_farms[v][4] = "empty"
     main_canvas.tag_raise(tractor)
@@ -135,7 +141,6 @@ def sheep_movement():
     y_min1 = 0  # max values also used in setting starting coordinates for tractor
     x_max1 = int(main_canvas['width'])
     y_max1 = int(main_canvas['height'])
-    print(main_canvas.coords(existing_sheep_widget))
     for p in range(0, len(existing_sheep)):
         if randint(0, 100) == 5:
             x1, y1 = main_canvas.coords(existing_sheep_widget[p])
@@ -182,8 +187,13 @@ def fence(x, y, l, w, item):
 
 
 def farm_button(tractor):
-    '''Adds more farms when button is pressed'''
-    add_cabbage_field(randint(100, 1100), randint(50, 600), (rw * 10), (rh * 10), cabbage_texture, tractor)
+    '''Adds a random farm which was pre-setted inside the farm_coords list when button is pressed'''
+    try:
+        r = randint(0,len(farm_coords))
+        add_cabbage_field(farm_coords[r][0],farm_coords[r][1],farm_coords[r][2],farm_coords[r][3],cabbage_texture,tractor)
+        farm_coords.pop(r)
+    except IndexError:
+        print("Sorry, not enough space for another farm.")
 
 
 def hay_button():
@@ -204,12 +214,16 @@ def sheep_button():
 """Adding things to the canvas(Fences,CabbageFields) at the beginning"""
 
 def add_things_canvas():
-    add_cabbage_field(100, 50, (rw * 10), (rh * 10), cabbage_texture, tractor)
-    add_cabbage_field(300, 220, (rw * 10), (rh * 10), cabbage_texture, tractor)
     fence(1, (y_max) - 10, (x_max), int(10), fence_img)
     fence(1, (y_min) + 5, (x_max), int(10), fence_img)
     fence(1, 1, (x_min) + 5, (y_max), side_fence)
     fence(1195, 1, (x_min) + 5, (y_max), side_fence)
+    # Testing new fence templates
+    for i in range(0,len(fenced_area)):
+        fence(fenced_area[i][0],fenced_area[i][1],fenced_area[i][2],10,fence_img)
+        fence(fenced_area[i][0],fenced_area[i][1]+fenced_area[i][3],fenced_area[i][2],10,fence_img)
+        fence(fenced_area[i][0],fenced_area[i][1],10,fenced_area[i][3],side_fence)
+        fence(fenced_area[i][0]+fenced_area[i][2],fenced_area[i][1],10,fenced_area[i][3],side_fence)
 
 
 def main():
@@ -221,17 +235,21 @@ def main():
     y_max = int(main_canvas['height'])
     main_canvas.pack(expand=YES, fill=BOTH)
     main_canvas.create_image(0, 0, image=bck_img, anchor=NW)  # Sets background of the window to grass# create canvas
-    button = Button(main_canvas, width=30, text='Add Sheep', command=sheep_button, bg='light green')
-    button_haybail = Button(main_canvas, width=30, text="Add Hay Bails", command=hay_button)
-    button_farm = Button(main_canvas, width=30, text='Add Farm', command=lambda: farm_button(tractor))
+    button = Button(root, width=30, text='Add Sheep', command=sheep_button, bg='light green')
+    button_haybail = Button(root, width=30, text="Add Hay Bails", command=hay_button)
+    button_farm = Button(root, width=30, text='Add Farm', command=lambda: farm_button(tractor))
     button.configure(width=10)
     button_haybail.configure(width=10)
+    button.pack(side=LEFT)
+    button_haybail.pack(side=LEFT)
+    button_farm.pack(side=LEFT)
     barn = main_canvas.create_image(x_max - 10, y_min + 20, image=barn_img, anchor=NE)
-    button1 = main_canvas.create_window(1, (y_max) - 30, anchor=NW, window=button)
-    button2 = main_canvas.create_window(130, (y_max) - 30, anchor=NW, window=button_haybail)
-    button3 = main_canvas.create_window(260, (y_max) - 30, anchor=NW, window=button_farm)
+    """button1 = main_canvas.create_window(1, (y_max) + 30, anchor=NW, window=button)
+    button2 = main_canvas.create_window(130, (y_max) + 30, anchor=NW, window=button_haybail)
+    button3 = main_canvas.create_window(260, (y_max) + 30, anchor=NW, window=button_farm)"""
     tractor = main_canvas.create_image(300, 200, image=tractor_img, anchor=NW)  # adding tractor to the canvas
-    Label(root, textvariable=global_cabbage_var).pack()
+    Label(root, textvariable=tractor_cabbage_var).pack(side=RIGHT)   
+    Label(root, textvariable=barn_cabbage_var).pack(side=RIGHT)
     '''Calls upon add_things_function above'''
     add_things_canvas()
     boundaries_detect()
@@ -255,7 +273,7 @@ def boundaries_detect():
         if inside_farm(tractor) == True and existing_farms[v][4] == "grown":
             cabbages_global += collect_cabbage(tractor, existing_farms[v], dirt_texture, tractor_img)
             print(cabbages_global)
-            global_cabbage_var.set("Barn cabbages: " + str(cabbages_global))
+            barn_cabbage_var.set("Barn cabbages: " + str(cabbages_global))
             continue
         if inside_farm(tractor) == False or existing_farms[v][4] == "empty":
             move_widget(tractor, x1 + vx, y1 + vy)

@@ -1,0 +1,68 @@
+# guys this the code for the keybord using rectangle as robot, 
+from tkinter import * 
+#Function to get robot to move left in response to left arrow key press by taking coordinates and 
+#moving the robot 5 pixels to left (-20 pixels) 
+def leftKey(event):
+    print ("Left key pressed" )
+    x1,y1,x2,y2=main_canvas.coords(tractor2 )
+    main_canvas.coords(tractor2 ,x1-20,y1,x2-20,y2) 
+#Function to get robot to move right in response to left arrow key press by taking coordinates 
+#and moving the robot 5 pixels to right (+20 pixels) 
+def rightKey(event):
+    print ("Right key pressed" )
+    x1,y1,x2,y2=main_canvas.coords(tractor2 )
+    main_canvas.coords(tractor2 ,x1+20,y1,x2+20,y2) 
+
+def upKey(event):
+    print ("Up key pressed" )
+
+def downKey(event):
+    print ("Down key pressed" )
+root = Tk() 
+main_canvas = Canvas (root, width=300, height=300) 
+main_canvas.pack() 
+
+tractor2 = main_canvas.create_rectangle (120,120,100, 100, width=2) 
+
+main_canvas.bind('<Left>', leftKey) 
+main_canvas.bind('<Right>', rightKey) 
+main_canvas.bind('<Up>', upKey) 
+main_canvas.bind('<Down>', downKey) 
+main_canvas.focus_set() 
+
+root.mainloop()
+
+# this the code with the tractor, but its giving me error can some one try to fix it ?
+
+from tkinter import * 
+#Function to get robot to move left in response to left arrow key press by taking coordinates and 
+#moving the robot 5 pixels to left (-20 pixels) 
+def leftKey(event):
+    print ("Left key pressed" )
+    x1,y1,x2,y2=main_canvas.coords(tractor2 )
+    main_canvas.coords(tractor2 ,x1-20,y1,x2-20,y2) 
+#Function to get robot to move right in response to left arrow key press by taking coordinates 
+#and moving the robot 5 pixels to right (+20 pixels) 
+def rightKey(event):
+    print ("Right key pressed" )
+    x1,y1,x2,y2=main_canvas.coords(tractor2 )
+    main_canvas.coords(tractor2 ,x1+20,y1,x2+20,y2) 
+
+def upKey(event):
+    print ("Up key pressed" )
+
+def downKey(event):
+    print ("Down key pressed" )
+root = Tk() 
+main_canvas = Canvas (root, width=300, height=300) 
+main_canvas.pack() 
+tractor_img = PhotoImage (file="textures/tractor_right.gif")
+tractor2 = main_canvas.create_image(100,100,image = tractor_img, anchor = NW) 
+
+main_canvas.bind('<Left>', leftKey) 
+main_canvas.bind('<Right>', rightKey) 
+main_canvas.bind('<Up>', upKey) 
+main_canvas.bind('<Down>', downKey) 
+main_canvas.focus_set() 
+
+root.mainloop()

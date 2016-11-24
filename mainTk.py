@@ -25,6 +25,7 @@ y_min = 0  # max values also used in setting starting coordinates for tractor
 existing_farms,existing_sheep,existing_sheep_widget = [], [], [] # existsing farms is list containing a list for each individual farm. Order of items inside the inner list is: x-coord, y-coord, x2-coord, y2-coord, farm_type
 farm_coords = [[20,20,100,120],[20,160,220,160],[20,330,100,180],[20,540,100,80],[20,640,300,60],[140,20,100,50],[140,80,100,60],[140,340,100,210],[140,560,200,60],[260,20,180,190],[260,220,100,80],[370,220,150,80],[260,320,260,220],[350,560,170,140],[540,220,120,120],[680,220,220,120],[740,360,100,180],[540,610,250,90],[850,360,240,80],[850,450,340,80],[1100,150,90,290],[920,150,160,200]]
 fenced_area=[[460,0,440,200],[540,360,180,230],[800,550,400,160]]
+print(fenced_area[0][0])
 vx = -1
 vy = -1
 rh = randint(8, 12)
@@ -149,18 +150,20 @@ def sheep_movement():
             move_widget(existing_sheep_widget[p], (x1 + vx), (y1 + vy))
 
 
-def add_sheep(x, y, item):
+def add_sheep(item):
     '''This adds an image of a sheep to the canvas'''
     s = 0
-
-    for s in range(0, len(existing_farms)):
+    k= randint(0,2)
+    x = randint(fenced_area[k][0],fenced_area[k][0]+fenced_area[k][2])
+    y = randint(fenced_area[k][1],fenced_area[k][1]+fenced_area[k][3])
+    """for s in range(0, len(existing_farms)):
         # If statement makes sure that the sheep does not spawn on a cabbage patch
         if x > existing_farms[s][0] and x < existing_farms[s][1] and y > existing_farms[s][2] and y < existing_farms[s][
             3]:
             # recur the function, it will keep recuring until the coordinates are not on a cabbage patch.
             add_sheep(randint(50, 1150), randint(50, 650), sheep1)
             return None
-            # add a sheep to the canvas once the x and y coordinates do not clash with a cabbage patch
+            # add a sheep to the canvas once the x and y coordinates do not clash with a cabbage patch""" #  No longer needed as sheep will only spawn inside the fenced areas
     temp_sheep_widget = main_canvas.create_image(x, y, image=item, anchor=NW)
     existing_sheep_widget.append(temp_sheep_widget)
     existing_sheep.append([x, y])
@@ -208,7 +211,7 @@ def go_start_field(tractor, farm_x, farm_y):
 
 def sheep_button():
     """ Button to connect button being pressed by the user to function to draw the sheep on the screen"""
-    add_sheep(randint(50, 1150), randint(50, 650), sheep1)
+    add_sheep(sheep1)
 
 
 """Adding things to the canvas(Fences,CabbageFields) at the beginning"""
@@ -244,9 +247,6 @@ def main():
     button_haybail.pack(side=LEFT)
     button_farm.pack(side=LEFT)
     barn = main_canvas.create_image(x_max - 10, y_min + 20, image=barn_img, anchor=NE)
-    """button1 = main_canvas.create_window(1, (y_max) + 30, anchor=NW, window=button)
-    button2 = main_canvas.create_window(130, (y_max) + 30, anchor=NW, window=button_haybail)
-    button3 = main_canvas.create_window(260, (y_max) + 30, anchor=NW, window=button_farm)"""
     tractor = main_canvas.create_image(300, 200, image=tractor_img, anchor=NW)  # adding tractor to the canvas
     Label(root, textvariable=tractor_cabbage_var).pack(side=RIGHT)   
     Label(root, textvariable=barn_cabbage_var).pack(side=RIGHT)

@@ -4,7 +4,7 @@ import time
 
 global root
 root = Tk()
-global barn_img, haybail, cabbage_texture, sheep1, tractor_img, side_fence, fence_img, dirt_texture, icon
+global barn_img, haybail, cabbage_texture, sheep1, tractor_img, side_fence, fence_img, dirt_texture
 """ All the imported images are in this section"""
 fence_img = PhotoImage(file="textures/fence.gif")  # Assigns fence image
 side_fence = PhotoImage(file="textures/side_fence.gif")  # Assigns fence_long image
@@ -15,7 +15,6 @@ dirt_texture = PhotoImage(file="textures/dirt.gif")
 cabbage_texture = PhotoImage(file="textures/cabbage.gif")
 sheep1 = PhotoImage(file='textures/sheep.gif')
 haybail = PhotoImage(file="textures/hay_bail.gif")
-icon = Image("photo", file="textures/tractor_right.gif")
 """---------------------------------------------------------------------------------------------------------"""
 
 """All the variables are in this section"""
@@ -91,7 +90,7 @@ def go_to_barn(tractor):
             vx = -1
         if trac_x == barn_x:
             vx = 0
-        if trac_y < barn_y:
+        if trac_y < barn_y: 
             vy = 1
         if trac_y > barn_y:
             vy = -1
@@ -148,8 +147,18 @@ def sheep_movement():
             vx = randint(-10, 10)
             vy = randint(-10, 10)
             move_widget(existing_sheep_widget[p], (x1 + vx), (y1 + vy))
-
-
+def hit_fenced_area(x,y):
+    """ Should detect when the tractor hits the fenced area, however i couldn't get it to work properly so it is not used."""
+    global fenced_area_tracker
+    fenced_area_tracker = 0
+    status = False
+    while fenced_area_tracker < len(fenced_area):
+        if x > fenced_area[fenced_area_tracker][0] and x <(fenced_area[fenced_area_tracker][0]+fenced_area[fenced_area_tracker][1]) and y > fenced_area[fenced_area_tracker][2] and y < (fenced_area[fenced_area_tracker][2]+fenced_area[fenced_area_tracker][3]):
+            print("True")
+            return True
+        fenced_area_tracker += 1
+    return status
+         
 def add_sheep(item):
     '''This adds an image of a sheep to the canvas'''
     s = 0
@@ -232,7 +241,6 @@ def add_things_canvas():
 def main():
     global main_canvas, tractor, x_max, y_max, barn, fence_img
     """Main function to create canvas and a few things in it"""
-    root.tk.call('wm', 'iconphoto', root._w, icon)  # Changes the application icon
     main_canvas = Canvas(width=1200, height=720, bg='white')
     x_max = int(main_canvas['width'])
     y_max = int(main_canvas['height'])
@@ -262,6 +270,7 @@ def boundaries_detect():
     cabbages_global = 0
     while True:
         x1, y1 = main_canvas.coords(tractor)
+        k=hit_fenced_area(x1,y1)
         if (x1 + 20) > x_max and inside_farm(tractor) == False:
             vx = -1
         if (y1 + 25) > y_max and inside_farm(tractor) == False:
@@ -277,7 +286,6 @@ def boundaries_detect():
             continue
         if inside_farm(tractor) == False or existing_farms[v][4] == "empty":
             move_widget(tractor, x1 + vx, y1 + vy)
-
         sheep_movement()
         time.sleep(0.01)
     return
